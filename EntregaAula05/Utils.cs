@@ -20,19 +20,36 @@ namespace Cs958 {
             }
             return true;
         }
-        internal static int[,]? ColetaMatriz() {
+        internal static bool ColetaMatriz(out int[,]? matriz) {
             Console.WriteLine("Por favor, entre com a matriz:");
-            if (!ColetaLinha(out var linhaLida)) return default;
-            int qntdCol = linhaLida.Length;
-            int[,] matriz = new int[qntdCol, qntdCol];
-            if (!ConverteuListaParaLinhadaMatriz(matriz, 0, linhaLida)) return default;
-            for (int iLinha = 1; iLinha < qntdCol; iLinha++) {
-                if (!ColetaLinha(out linhaLida)) return default;
-                if (!ConverteuListaParaLinhadaMatriz(matriz, iLinha, linhaLida)) return default;
+            if (!ColetaLinha(out var linhaLida)) {
+                matriz = default; 
+                return false;
             }
-            return matriz;
+            int qntdCol = linhaLida.Length;
+            matriz = new int[qntdCol, qntdCol];
+            if (!ConverteuListaParaLinhadaMatriz(matriz, 0, linhaLida)) {
+                matriz = default;
+                return false;
+            }
+            for (int iLinha = 1; iLinha < qntdCol; iLinha++) {
+                if (!ColetaLinha(out linhaLida)) {
+                    matriz = default;
+                    return false;
+                }
+                if (!ConverteuListaParaLinhadaMatriz(matriz, iLinha, linhaLida)) {
+                    matriz = default;
+                    return false;
+                }
+            }
+            return true;
         }
 
+        internal static bool ColetaCaminho(out int[]? caminho) {
+            Console.WriteLine("Entre com o caminhho:");
+            if (!ColetaLinha(out caminho)) return false;
+            return true;
+        }
 
         internal static bool ConverteuListaParaLinhadaMatriz(int[,] matriz, int currentLine, int[] listaNumeros) {
             if (listaNumeros.Length > matriz.GetLength(0)) {
@@ -47,17 +64,17 @@ namespace Cs958 {
             return true;
         }
 
-        internal static int CalculaDistancia(int[,] distancias, int[] rota) {
-            var distanciaTotal = 0;
+        internal static bool CalculaDistancia(int[,] distancias, int[] rota, out int distanciaTotal) {
+            distanciaTotal = 0;
             for (int cidade = 0; cidade < rota.Length - 1; cidade++) {
                 if (rota[cidade + 1] >= distancias.GetLength(0)) {
                     Console.WriteLine($"Erro processando a rota:{Environment.NewLine}" +
                                       $"    A cidade número {rota[cidade + 1]} não existe.");
-                    return -1;
+                    return false;
                 }
                 distanciaTotal += distancias[rota[cidade], rota[cidade + 1]];
             }
-            return distanciaTotal;
+            return true;
         }
 
     }

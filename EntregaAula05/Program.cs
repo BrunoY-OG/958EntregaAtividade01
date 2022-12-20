@@ -3,14 +3,10 @@
 namespace Cs958 {
     public class exercicio {
         public static void Main() {            
-            int[,]? distancias = Utils.ColetaMatriz();
-            if (distancias is null) return;
-            Console.WriteLine("Entre com a rota:");
-            if (!Utils.ColetaLinha(out var rota)) return;
-            int totalDistancia = Utils.CalculaDistancia(distancias, rota);
-            if (totalDistancia >= 0) {
+            if (!Utils.ColetaMatriz(out int[,]? distancias)) return;
+            if (!Utils.ColetaCaminho(out var caminho)) return;
+            if (Utils.CalculaDistancia(distancias, caminho, out int totalDistancia))
                 Console.WriteLine($"A distância total é de {totalDistancia} km.");
-            }
         }
     }
 }
