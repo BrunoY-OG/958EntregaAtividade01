@@ -65,12 +65,12 @@
         internal static bool CalculaDistancia(int[,] distancias, int[] rota, out int distanciaTotal) {
             distanciaTotal = 0;
             for (int cidade = 0; cidade < rota.Length - 1; cidade++) {
-                if (rota[cidade + 1] >= distancias.GetLength(0)) {
+                if (rota[cidade + 1] > distancias.GetLength(0)) {
                     Console.WriteLine($"Erro processando a rota:{Environment.NewLine}" +
                                       $"    A cidade número {rota[cidade + 1]} não existe.");
                     return false;
                 }
-                distanciaTotal += distancias[rota[cidade], rota[cidade + 1]];
+                distanciaTotal += distancias[rota[cidade] - 1, rota[cidade + 1] - 1];
             }
             return true;
         }
