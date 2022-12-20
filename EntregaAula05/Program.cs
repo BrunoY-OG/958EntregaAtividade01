@@ -24,7 +24,7 @@ namespace Cs958 {
             }
 
             bool ConverteuListaParaLinhadaMatriz(int[,] matriz, int currentLine, int[] listaNumeros) {
-                if (listaNumeros.Length > matriz.GetLength(currentLine)) {
+                if (listaNumeros.Length > matriz.GetLength(0)) {
                     Console.WriteLine($"Erro processando matriz na linha {currentLine}:{Environment.NewLine}" +
                                       $"    há mais elementos lidos do que a linha comporta.");
                     return false;
@@ -69,7 +69,7 @@ namespace Cs958 {
             if (!ColetaLinha(out var rota)) return;
             int totalDistancia = CalculaDistancia(distancias, rota);
             if (totalDistancia >= 0) {
-                Console.WriteLine($"A distância total é de {totalDistancia}.");
+                Console.WriteLine($"A distância total é de {totalDistancia} km.");
             }
         }
     }
