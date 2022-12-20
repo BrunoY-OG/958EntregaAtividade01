@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Cs958 {
-    internal class Utils {
+    internal class Collector {
         internal static bool ColetaLinha(out int[] listaNumeros) {
             string? linhaLida = Console.ReadLine();
             while ((linhaLida is null) || (linhaLida == string.Empty)) {
