@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Cs958 {
+﻿namespace Cs958 {
     internal class Collector {
         internal static bool ColetaLinha(out int[] listaNumeros) {
             string? linhaLida = Console.ReadLine();
