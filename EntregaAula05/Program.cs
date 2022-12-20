@@ -1,7 +1,5 @@
-﻿using System;
-
-namespace Cs958 {
-    public class exercicio {
+﻿namespace Cs958 {
+    public class Exercicio {
         public static void Main() {            
             if (!Collector.ColetaMatriz(out int[,]? distancias)) return;
             if (!Collector.ColetaCaminho(out var caminho)) return;
