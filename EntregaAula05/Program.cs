@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Cs958 {
+﻿namespace Cs958 {
     public class exercicio {
         public static void Main() {            
             if (!Collector.ColetaMatriz(out int[,]? distancias)) return;

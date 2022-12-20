@@ -1,67 +1,61 @@
-﻿using System;
-
+﻿using System.Globalization;
+using CsvHelper;
 namespace Cs958 {
     internal class Collector {
-        internal static bool ColetaLinha(string? linhaLida, out int[]? listaNumeros) {
-            if ((linhaLida is null) || (linhaLida == string.Empty)) {
-                Console.WriteLine($"Erro processando linha: linha vazia.");
-                listaNumeros = default;
-                return false;
-            }
-            string[] listaLinha = linhaLida.Split(",");
-            listaNumeros = new int[listaLinha.Length];
-            for (int iC1 = 0; iC1 < listaLinha.Length; iC1++) {
-                if (!int.TryParse(listaLinha[iC1], out listaNumeros[iC1])) {
-                    Console.WriteLine($"Erro processando linha na coluna {iC1}:{Environment.NewLine}" +
-                                      $"    TryParse retornou false.");
-                    return false;
-                }
-            }
-            return true;
-        }
+        internal static readonly string PathToMatriz = Path.Combine(
+                            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                            "matriz.txt");
+
+        internal static readonly string PathToCaminho = Path.Combine(
+                            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                            "caminho.txt");
+
+
         internal static bool ColetaMatriz(out int[,]? matriz) {
-            string? matrizLida = FileHandler.Load(FileHandler.PathToMatriz);
-            if ((matrizLida is null) || (matrizLida == string.Empty)) {
-                Console.WriteLine($"Erro processando matriz: arquivo vazio.");
-                matriz = default;
-                return false;
-            }
-            string[] linhasMatriz = matrizLida.Split(Environment.NewLine);
-            if (!ColetaLinha(linhasMatriz[0], out int[]? numerosLidos)) {
-                matriz = default; 
-                return false;
-            }
-            int qntdCol = numerosLidos.Length;
-            matriz = new int[qntdCol, qntdCol];
-            if (!ConverteuListaParaLinhadaMatriz(matriz, 0, numerosLidos)) {
-                matriz = default;
-                return false;
-            }
-            for (int iLinha = 1; iLinha < qntdCol; iLinha++) {
-                if (!ColetaLinha(linhasMatriz[iLinha], out numerosLidos)) {
+            try {
+                using var reader = new StreamReader(PathToMatriz);
+                using var csv = new CsvParser(reader, CultureInfo.InvariantCulture);
+                if ((csv is null) || (!csv.Read())) {
                     matriz = default;
                     return false;
                 }
-                if (!ConverteuListaParaLinhadaMatriz(matriz, iLinha, numerosLidos)) {
-                    matriz = default;
-                    return false;
+                var numColunas = csv.Record.Length;
+                matriz = new int[numColunas, numColunas];
+                for (int i = 0; i < numColunas; i++) {
+                    var linha = csv.Record;
+                    for (int j = 0; j < numColunas; j++) {
+                        matriz[i, j] = int.Parse(linha[j]);
+                    }
+                    csv.Read();
                 }
             }
+            catch {
+                Console.WriteLine($"Erro coletando matriz.");
+                matriz = default;
+                return false;
+            }            
             return true;
         }
 
-        internal static bool ColetaCaminho(out int[]? caminho) =>
-            ColetaLinha(FileHandler.Load(FileHandler.PathToCaminho), out caminho);
-
-        internal static bool ConverteuListaParaLinhadaMatriz(int[,] matriz, int currentLine, int[] listaNumeros) {
-            if (listaNumeros.Length > matriz.GetLength(0)) {
-                Console.WriteLine($"Erro processando matriz na linha {currentLine}:{Environment.NewLine}" +
-                                  $"    há mais elementos lidos do que a linha comporta.");
-                return false;
+        internal static bool ColetaCaminho(out int[]? caminho) {
+            try {
+                using var reader = new StreamReader(PathToCaminho);
+                using var csv = new CsvParser(reader, CultureInfo.InvariantCulture);
+                if (!csv.Read()) {
+                    caminho = default;
+                    return false;
+                }
+                var numColunas = csv.Record.Length;
+                caminho = new int[numColunas];
+                var linha = csv.Record;
+                for (int i = 0; i < numColunas; i++) {
+                    caminho[i] = int.Parse(linha[i]);
+                }
             }
-            for (int iC1 = currentLine + 1; iC1 < listaNumeros.Length; iC1++) {
-                matriz[currentLine, iC1] = listaNumeros[iC1];
-                matriz[iC1, currentLine] = listaNumeros[iC1];
+            catch {
+                Console.WriteLine($"Erro coletando caminho.");
+                caminho = default;
+                return false;
             }
             return true;
         }
